@@ -1,0 +1,6 @@
+{
+	"name": "Pipeline load Current year data from SQLDB to Synapse",
+	"properties": {
+		"annotations": []
+	}
+}
