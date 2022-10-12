@@ -12,7 +12,15 @@
 					"name": "AgencyMaster"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SynapseNYC_Payroll_AGENCY_MD",
+						"type": "DatasetReference"
+					},
+					"name": "SynapseAGENCY"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
@@ -22,7 +30,19 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: true,",
 				"     limit: 100,",
-				"     ignoreNoFilesFound: false) ~> AgencyMaster"
+				"     ignoreNoFilesFound: false) ~> AgencyMaster",
+				"AgencyMaster sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SynapseAGENCY"
 			]
 		}
 	}
