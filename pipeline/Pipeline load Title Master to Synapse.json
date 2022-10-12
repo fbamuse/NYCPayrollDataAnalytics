@@ -1,9 +1,9 @@
 {
-	"name": "Pipeline load 2021 payroll into SQLDB",
+	"name": "Pipeline load Title Master to Synapse",
 	"properties": {
 		"activities": [
 			{
-				"name": "Payroll Data to SQL DB transaction table",
+				"name": "dataflow Title MD",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Payroll Data to SQL DB transaction table",
+						"referenceName": "dataflow Title MD",
 						"type": "DataFlowReference"
 					},
 					"compute": {

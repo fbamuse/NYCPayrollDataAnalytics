@@ -1,9 +1,9 @@
 {
-	"name": "Pipeline load 2021 payroll into SQLDB",
+	"name": "Pipeline load Agency Master to Synapse",
 	"properties": {
 		"activities": [
 			{
-				"name": "Payroll Data to SQL DB transaction table",
+				"name": "dataflow load AgencyMD",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Payroll Data to SQL DB transaction table",
+						"referenceName": "dataflow load AgencyMD",
 						"type": "DataFlowReference"
 					},
 					"compute": {
