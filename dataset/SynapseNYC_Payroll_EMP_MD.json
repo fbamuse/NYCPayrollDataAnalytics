@@ -1,5 +1,5 @@
 {
-	"name": "AzureSynapseNYC_Payroll_EMP_MD",
+	"name": "SynapseNYC_Payroll_EMP_MD",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSynapseAnalytics1",
