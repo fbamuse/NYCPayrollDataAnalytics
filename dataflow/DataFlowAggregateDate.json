@@ -29,6 +29,15 @@
 				},
 				{
 					"name": "union1"
+				},
+				{
+					"name": "filterFY"
+				},
+				{
+					"name": "TotalPaidColumns"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -40,12 +49,12 @@
 				"          PayrollNumber as short,",
 				"          AgencyID as string,",
 				"          AgencyName as string,",
-				"          EmployeeID as integer,",
+				"          EmployeeID as string,",
 				"          LastName as string,",
 				"          FirstName as string,",
 				"          AgencyStartDate as date,",
 				"          WorkLocationBorough as string,",
-				"          TitleCode as integer,",
+				"          TitleCode as string,",
 				"          TitleDescription as string,",
 				"          LeaveStatusasofJune30 as string,",
 				"          BaseSalary as double,",
@@ -134,7 +143,12 @@
 				"     partitionBy('roundRobin', 2),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"select2, select1 union(byName: false)~> union1"
+				"select2, select1 union(byName: false)~> union1",
+				"union1 filter(toInteger(FiscalYear) >= $FiscalYear) ~> filterFY",
+				"filterFY derive(totalpaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> TotalPaidColumns",
+				"TotalPaidColumns aggregate(groupBy(AgencyName,",
+				"          FiscalYear),",
+				"     Totalpaid = sum(totalpaid)) ~> aggregate1"
 			]
 		}
 	}
