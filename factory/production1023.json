@@ -1,0 +1,9 @@
+{
+	"name": "production1023",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "9588bef2-2b6b-40d8-93cd-9291d43271cf",
+		"tenantId": "53072645-2a33-45c7-a3ce-dadf1b0c2faf"
+	}
+}
