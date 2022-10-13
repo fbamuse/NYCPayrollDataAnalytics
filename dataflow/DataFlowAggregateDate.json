@@ -19,7 +19,15 @@
 					"name": "AzureSqlTable"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "table_synapse_nycpayroll_summary",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1"
@@ -148,7 +156,25 @@
 				"filterFY derive(totalpaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> TotalPaidColumns",
 				"TotalPaidColumns aggregate(groupBy(AgencyName,",
 				"          FiscalYear),",
-				"     Totalpaid = sum(totalpaid)) ~> aggregate1"
+				"     Totalpaid = sum(totalpaid)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          FiscalYear as integer,",
+				"          AgencyName as string,",
+				"          TotalPaid as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
