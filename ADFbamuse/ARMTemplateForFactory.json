@@ -53,7 +53,7 @@
 								"parameters": {},
 								"datasetParameters": {
 									"nycpayroll2021": {},
-									"sink1": {}
+									"AzureSqlTable1": {}
 								}
 							},
 							"staging": {},
@@ -1400,34 +1400,34 @@
 								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "AzureSqlTable1"
 						}
 					],
 					"transformations": [],
 					"scriptLines": [
 						"source(output(",
-						"          FiscalYear as short,",
-						"          PayrollNumber as short,",
-						"          AgencyCode as short,",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyCode as string,",
 						"          AgencyName as string,",
-						"          EmployeeID as integer,",
+						"          EmployeeID as string,",
 						"          LastName as string,",
 						"          FirstName as string,",
 						"          AgencyStartDate as date,",
 						"          WorkLocationBorough as string,",
-						"          TitleCode as integer,",
+						"          TitleCode as string,",
 						"          TitleDescription as string,",
 						"          LeaveStatusasofJune30 as string,",
 						"          BaseSalary as double,",
 						"          PayBasis as string,",
-						"          RegularHours as short,",
+						"          RegularHours as double,",
 						"          RegularGrossPaid as double,",
 						"          OTHours as double,",
 						"          TotalOTPaid as double,",
 						"          TotalOtherPay as double",
 						"     ),",
 						"     allowSchemaDrift: true,",
-						"     validateSchema: true,",
+						"     validateSchema: false,",
 						"     limit: 100,",
 						"     ignoreNoFilesFound: false) ~> nycpayroll2021",
 						"nycpayroll2021 sink(allowSchemaDrift: true,",
@@ -1460,7 +1460,29 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyID = AgencyCode,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     ),",
+						"     partitionBy('roundRobin', 2)) ~> AzureSqlTable1"
 					]
 				}
 			},
@@ -1518,7 +1540,11 @@
 						"     allowCopyCommand: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> SynapseTITLE"
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          TitleCode,",
+						"          TitleDescription",
+						"     )) ~> SynapseTITLE"
 					]
 				}
 			},
@@ -1579,7 +1605,8 @@
 						"     validateSchema: true,",
 						"     limit: 100,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> AzureSqlTable1",
+						"     format: 'table',",
+						"     partitionBy('roundRobin', 2)) ~> AzureSqlTable1",
 						"AzureSqlTable1 sink(allowSchemaDrift: true,",
 						"     validateSchema: true,",
 						"     input(",
@@ -1612,7 +1639,28 @@
 						"     allowCopyCommand: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> SynapsePayrollData"
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          PayrollNumber,",
+						"          AgencyID,",
+						"          AgencyName,",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName,",
+						"          AgencyStartDate,",
+						"          WorkLocationBorough,",
+						"          TitleCode,",
+						"          TitleDescription,",
+						"          LeaveStatusasofJune30,",
+						"          BaseSalary,",
+						"          PayBasis,",
+						"          RegularHours,",
+						"          RegularGrossPaid,",
+						"          OTHours,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     )) ~> SynapsePayrollData"
 					]
 				}
 			},
@@ -1728,7 +1776,12 @@
 						"     allowCopyCommand: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> SynapseEMP"
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          EmployeeID,",
+						"          LastName,",
+						"          FirstName",
+						"     )) ~> SynapseEMP"
 					]
 				}
 			},
